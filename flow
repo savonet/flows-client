@@ -1,0 +1,17 @@
+#!/usr/bin/env coffee
+
+program = require "./src/setup"
+require "./src/info"
+
+program.commands["Exit"] = ->
+  console.log "Bye!"
+  process.exit 0
+
+commands = (label for label, value of program.commands)
+exec = ->
+  console.log "Please choose an action:"
+  program.choose commands, (index) ->
+    command = commands[index]
+    program.commands[command]()
+
+program.events.on "ready", exec
