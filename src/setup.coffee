@@ -26,12 +26,16 @@ events.on "password", ->
     user     : program.user
     password : program.password
 
-  socket.on "error", (err) ->
-    console.error "Error while signing in: #{err}"
+  onError = (err) ->
+    console.error "Error while signing in!"
+    console.dir err if err?
     process.exit 1
 
+  socket.on "error", onError
   socket.on "signed-in", (user) ->
     program.user = user
+    socket.removeListener "error", onError
+    
     console.log "Signed in!"
     events.emit "ready"
 

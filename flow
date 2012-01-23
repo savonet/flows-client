@@ -1,11 +1,7 @@
 #!/usr/bin/env coffee
 
 program = require "./src/setup"
-require "./src/info"
-
-program.commands["Exit"] = ->
-  console.log "Bye!"
-  process.exit 0
+require "./src/commands"
 
 commands = (label for label, value of program.commands)
 exec = ->
