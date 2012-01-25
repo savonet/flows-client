@@ -5,6 +5,7 @@ require "./src/commands"
 
 commands = (label for label, value of program.commands)
 exec = ->
+  console.log ""
   console.log "Please choose an action:"
   program.choose commands, (index) ->
     command = commands[index]

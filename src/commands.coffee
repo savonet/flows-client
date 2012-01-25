@@ -103,6 +103,73 @@ program.commands["Delete radio"] = ->
         program.socket.removeListener "error", onError
         updateUser()
 
+program.commands["Add twitter to radio"] = ->
+  program.prompt "Token: ", (token) ->
+    radio = _.find program.user.radios, (radio) -> radio.token == token
+
+    if not radio?
+      console.error "No such radio!"
+      return program.events.emit "ready"
+  
+    program.socket.emit "auth-twitter", token
+
+    onError = (err) ->
+      console.log "Authentication failed!"
+      console.dir err if err?
+      program.events.emit "ready"
+
+    program.socket.once "error", onError
+    program.socket.once "confirm-twitter", (callback) ->
+      console.log "In order to authenticate a twitter account for radio: #{radio.name}"
+      console.log "You need to visit that URL:"
+      console.log "    #{callback.url}"
+      console.log ""
+      console.log "There you should take note of the PIN that will be displayed"
+      console.log "and report it here."
+      console.log ""
+      program.prompt "PIN? ", (verifier) ->
+        program.socket.emit callback.token, verifier
+      
+        program.socket.once "authenticated-twitter", (name) ->
+          console.log "Authenticated twitter account: #{name} for radio: #{radio.name}!"
+          program.socket.removeListener "error", onError
+          program.events.emit "ready"
+
+program.commands["Remove twitter from radio"] = ->
+  program.prompt "Token: ", (token) ->
+    radio = _.find program.user.radios, (radio) -> radio.token == token
+
+    if not radio?
+      console.error "No such radio!"
+      return program.events.emit "ready"
+
+    program.prompt "Twitter screen name: ", (name) ->
+      ok = _.any radio.twitters, (twitter) -> twitter == name
+      unless ok
+         console.error "This account is not authenticated for radio: #{radio.name}!"
+         return program.events.emit "ready"
+
+      program.socket.json.emit "delete-twitter",
+        token : radio.token
+        name  : name
+
+      onError = (err) ->
+        console.log "Operation failed!"
+        console.dir err if err?
+        program.events.emit "ready"
+
+      program.socket.once "error", onError
+      program.socket.once "deleted-twitter", ->
+        console.log ""
+        console.log "Twitter account #{name} successfully un-registered for radio: #{radio.name}!"
+        console.log ""
+        console.log "This account shall not be used by SavonetFlows anymore. However, SavonetFlows"
+        console.log "remains authorized for this account. Please visit the account profile to remove"
+        console.log "it."
+        
+        program.socket.removeListener "error", onError
+        updateUser()
+
 program.commands["Exit"] = ->
   console.log "Bye!"
   process.exit 0
