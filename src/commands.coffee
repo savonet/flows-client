@@ -133,7 +133,7 @@ program.commands["Add twitter to radio"] = ->
         program.socket.once "authenticated-twitter", (name) ->
           console.log "Authenticated twitter account: #{name} for radio: #{radio.name}!"
           program.socket.removeListener "error", onError
-          program.events.emit "ready"
+          updateUser()
 
 program.commands["Remove twitter from radio"] = ->
   program.prompt "Token: ", (token) ->
