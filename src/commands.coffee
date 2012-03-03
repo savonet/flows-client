@@ -59,6 +59,26 @@ program.commands["Edit radio name"] = ->
           console.log "Name successfuly edited!"
           updateUser()
 
+program.commands["Edit radio location"] = ->
+  program.prompt "Token: ", (token) ->
+    radio = _.find program.user.radios, (radio) -> radio.token == token
+
+    if not radio?
+      console.error "No such radio!"
+      return program.events.emit "ready"
+
+    update = _.clone radio
+
+    program.prompt "Latitude: ", (lat) ->
+      update.latitude = lat
+
+      program.prompt "Longitude: ", (long) ->
+        update.longitude = long
+
+        query "edit-radio", update, "edited-radio", ->
+          console.log "Location successfuly edited!"
+          updateUser()
+
 program.commands["Delete radio"] = ->
   program.prompt "Token: ", (token) ->
     radio = _.find program.user.radios, (radio) -> radio.token == token
