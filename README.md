@@ -9,9 +9,6 @@ Install
 =======
 
 First, grab the sources, install [node](http://nodejs.org/) and [npm](http://npmjs.org/). 
-Please note that due to an [this issue](https://github.com/LearnBoost/socket.io-client/issues/372), 
-node `0.6.x` does not work for this application at the moment.
-
 Then install all dependencies:
 
     npm install
