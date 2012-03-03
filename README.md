@@ -1,7 +1,7 @@
 Flows command-line client
 =========================
 
-This is the command-line client for [savonet Flows](http://liquidsoap.fm/flows.html) service.
+This is the command-line client for [savonet Flows](http://flows.liquidsoap.fm/) service.
 It provides administration commands for flows users to update their radio's name, see listeners, 
 setup a twitter relay, etc..
 
